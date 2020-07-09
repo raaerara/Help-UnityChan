@@ -38,10 +38,17 @@ public class UnityChanController : MonoBehaviour
     //タイムを表示するテキスト
     private GameObject clearTimeText;
 
+    //ハイスコア用変数
+    private float highScore;
 
     // Use this for initialization
     void Start()
     {
+        //保存しておいたハイスコアを呼び出し取得し保存されていなければ9999になる
+        highScore = PlayerPrefs.GetFloat("HIGHSCORE", 9999);
+
+        //ハイスコア表示(仮)
+        Debug.Log(highScore.ToString("f2") + "秒");
 
         //Animatorコンポーネントを取得
         this.myAnimator = GetComponent<Animator>();
@@ -117,18 +124,19 @@ public class UnityChanController : MonoBehaviour
 
         //衝突した障害物を格納
         obstacle = other.gameObject;
-
-        // //障害物に衝突した場合
-        // if (other.gameObject.tag == "RoadBlockerTag" || other.gameObject.tag == "PianoTag" || other.gameObject.tag == "TankTag")
-        // {
-
-        // }
-
+      
         //ゴール地点に到達した場合
         if (other.gameObject.tag == "GoalTag")
         {
             //ゲームクリア
             isGoal = true;
+
+            //ハイスコアを更新
+            if(countClear < highScore)
+            {
+                PlayerPrefs.SetFloat("HIGHSCORE", countClear);
+            }
+
         }
     }
 
