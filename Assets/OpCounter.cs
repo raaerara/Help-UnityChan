@@ -2,80 +2,77 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Playables;
+
+public class OpCounter : MonoBehaviour {
 
 
+    ////オブジェクトの取得用変数
+    private UnityChanController uCC; //UnityChanControllerスクリプトを入れる変数
+	////スクリプトの取得用変数
+    private Image opImg; //Imageコンポーネントを入れる変数
+    ////Playbleの取得用変数
+    private PlayableDirector sceneAnimation; //クリア時のアニメーションを再生するPlayableDirectorのオンオフを制御する変数
 
-public class OpCounter : MonoBehaviour
-{
-    //Unityちゃんを入れる変数
-    private GameObject player;
-    //UnityちゃんについてるUnityChanControllerスクリプトを入れる変数
-    private UnityChanController script;
-    private Image image; 
+    private bool isFadeout = false; //Imageフェードアウト開始の判定
 
-    private float alfa;
-    public Sprite[] counts = new Sprite[4];
-
-
-    //カウント数
-    private float count = 3f;
-
-    //カウント終了の判定
-    private bool isCountEnd = false;
-
-    //カウント画像透明化スピード
-    float alfaSpeed = 0.01f;
+    //////数値・係数を扱う変数
+    private float alpha = 1.0f;
+    ////係数
+    private float alphaSpeed = 0.01f; //OPカウント画像フェードアウトのスピード
 
 
-    // Use this for initialization
-    void Start()
-    {
-        //Imageを取得
-        image = this.GetComponent<Image>();
-
-        alfa = this.GetComponent<Image>().color.a;
-
-        //unityちゃんのオブジェクトとスクリプトを取得
-        player = GameObject.Find("unitychan");
-        script = player.GetComponent<UnityChanController>();
-        
-        //コルーチンでカウントダウン
-        StartCoroutine("OpcoRoutine");
-
-        
+    void Start () 
+	{
+        opImg = this.GetComponent<Image>();
+        StartCoroutine("OpcoRoutine"); //ゲーム開始時コルーチンでカウントダウン
+        uCC = GameObject.Find("unitychan").GetComponent<UnityChanController>(); //UnityChanControllerを取得
+        //Playbleの取得
+        this.sceneAnimation = GameObject.Find("GameSceneTimeline").GetComponent<PlayableDirector>(); //GameClearTimelineのPlayableDirectorを取得
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (isCountEnd)
+	
+	void Update () 
+	{
+        ////Imageフェードアウト処理
+        if (isFadeout == true)
         {
-            GetComponent<Image>().color = new Color(255, 255, 255, alfa);
-            alfa -= alfaSpeed;
+            opImg.color = new Color(opImg.color.r, opImg.color.g, opImg.color.b, alpha);
+            alpha -= alphaSpeed;
+
+            if (alpha <= 0)
+            {
+                Debug.Log("0だよ");
+                opImg.enabled = false;
+                opImg.color = new Color(opImg.color.r, opImg.color.g, opImg.color.b, 1.0f);
+                isFadeout = false;
+                }
         }
+	}
+
+
+    public void CallcoRoutine() //ボタンから呼び出すため記述
+    {
+        StartCoroutine("OpcoRoutine"); //ゲーム開始時コルーチンでカウントダウン
     }
 
-    //Updateを3秒後に呼び出す
-    IEnumerator OpcoRoutine()
+    //OPカウントダウンをするコルーチン
+    public Sprite[] opCountImages = new Sprite[4];
+    public IEnumerator OpcoRoutine()
     {
-        Debug.Log("コルーチン使えてるよ");
-        yield return new WaitForSeconds(2); // 3秒待機
-
+        yield return new WaitForSeconds(2); //2秒待機
+        //opImg.enabled = true;
         for (int i = 3; i >= 0; i--)
         {
-            if(i==0)
+            if (i == 0)
             {
-                //UnityChanControllerスクリプトをオン
-                script.enabled = true;
-                isCountEnd = true;
+                uCC.enabled = true; //UnityChanControllerスクリプトをオン
+                //opImg.sprite = opCountImages[i]; //カウント画像を表示
+                //opImg.enabled = true;
+                isFadeout = true;
             }
-            //カウント画像を表示
-            image.sprite = counts[i];
-            image.enabled = true;
-            yield return new WaitForSeconds(1); // 1秒待機
+            opImg.sprite = opCountImages[i]; //カウント画像を表示
+            opImg.enabled = true;
+            yield return new WaitForSeconds(1); //1秒待機
         }
-       
     }
-
-
 }

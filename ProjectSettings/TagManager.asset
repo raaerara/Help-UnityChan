@@ -8,6 +8,9 @@ TagManager:
   - RoadBlockerTag
   - TankTag
   - GoalTag
+  - CountImage
+  - Button_Retry
+  - Button_Home
   layers:
   - Default
   - TransparentFX
