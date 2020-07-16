@@ -13,32 +13,19 @@ public class GameMethods : MonoBehaviour
     public GameObject tankPrefab; //tankPrefabを入れる
     ////シーン中オブジェクトの取得
     private GameObject player; //unityちゃんのオブジェクトを入れる変数
-    
-    
-    
-    
-
-
-
     //////数値・係数を扱う変数
     ////ステージ設定
-    private float posRange = 5.2f; //アイテムを出すx方向の範囲
     private int startPos = 50; //スタート地点
     private int goalPos = 400; //ゴール地点
     
-
-
-
     
-
-
-
-
     // Use this for initialization
     void Start()
     {
         //ゲーム開始時にアイテム生成
         ItemGenerate();
+
+        GameObject.Find("GameSceneTimeline").GetComponent<PlayableController>().PlayTimeline(); //クリアアニメーションtimelineのplayableをオン
     }
 
     // Update is called once per frame
@@ -89,12 +76,5 @@ public class GameMethods : MonoBehaviour
         {
             turnOnObject.SetActive(false);
         }
-             
     }
-
-
-
-    
-
-
 }

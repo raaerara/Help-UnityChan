@@ -66,9 +66,8 @@ public class OpCounter : MonoBehaviour {
             if (i == 0)
             {
                 uCC.enabled = true; //UnityChanControllerスクリプトをオン
-                //opImg.sprite = opCountImages[i]; //カウント画像を表示
-                //opImg.enabled = true;
                 isFadeout = true;
+                alpha = 1.0f;
             }
             opImg.sprite = opCountImages[i]; //カウント画像を表示
             opImg.enabled = true;

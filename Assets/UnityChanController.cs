@@ -5,64 +5,24 @@ using UnityEngine.Playables;
 
 public class UnityChanController : MonoBehaviour
 {
-    //アニメーションするためのコンポーネントを入れる
-    private Animator myAnimator;
-    //Unityちゃんを移動させるコンポーネントを入れる
-    private Rigidbody myRigidbody;
-    //前進するための力
-    private float forwardForce = 300.0f;
-
-    //アニメーター
-    private float animatorSpeed = 1;
-
-    //経過時間
-    private float countTime = 0.0f;
-
-    //クリアタイム
-    private float countClear = 0.0f;
-
-    //動きを減速させる係数
-    private float decelerateCoefficient = 0.95f;
-
-    //障害物のオブジェクトを格納しておく変数
-    private GameObject obstacle = null;
-
-    //障害物に塞がれた判定
-    private bool isStop = false;
-
-    //ゴールしてないかの判定
-    private bool isGoal = false;
-
-    //タイムを表示するテキスト
-    private GameObject clearTimeText;
-
-    //ハイスコア用変数
-    private float highScore;
-
-    //クリア時のアニメーションを再生するTimeline
-    private GameObject clearAnimationTimeline;
     
-    //クリア時のアニメーションを再生するPlayableDirectorのオンオフを制御する変数
-    private PlayableDirector clearAnimation;
-
-    //ゲーム終了の判定用
-    private bool isGameEnd;
-
-    //Game終了時のボタンを入れておく変数
-    private GameObject GameLastButtons;
+    private Animator myAnimator; //アニメーションするためのコンポーネントを入れる
+    private Rigidbody myRigidbody; //Unityちゃんを移動させるコンポーネントを入れる
+    private float forwardForce = 300.0f; //前進するための力
+    private float animatorSpeed = 1f; //アニメーター
+    private float countTime = 0.0f; //経過時間
+    private float countClear = 0.0f; //クリアタイム
+    private float decelerateCoefficient = 0.95f; //動きを減速させる係数
+    private GameObject obstacle = null; //障害物のオブジェクトを格納しておく変数
+    private bool isStop = false; //障害物に塞がれた判定
+    private bool isGoal = false; //ゴールしてないかの判定
+    private GameObject clearTimeText; //タイムを表示するテキスト
+    private float highScore; //ハイスコア用変数
+    
 
     // Use this for initialization
     void Start()
     {
-        //シーン中のGameClearTimelineオブジェクトを取得
-        this.clearAnimationTimeline = GameObject.Find("GameClearTimeline");
-
-        //GameClearTimelineのPlayableDirectorを取得
-        this.clearAnimation = clearAnimationTimeline.GetComponent<PlayableDirector>();
-
-        //間違ってGameClearTimelineのPlayableDirectorがオンになっていないようにオフにしておく
-        this.clearAnimation.enabled = false;
-
         //保存しておいたハイスコアを呼び出し取得し保存されていなければ9999になる
         highScore = PlayerPrefs.GetFloat("HIGHSCORE", 9999);
 
@@ -80,14 +40,15 @@ public class UnityChanController : MonoBehaviour
 
         //シーン中のClearTimeTextオブジェクトを取得
         this.clearTimeText = GameObject.Find("ClearTimeText");
-
-        //GameLastButtonsを取得
-        GameLastButtons = GameObject.Find("Button_Retry");
+        
+        //GameSceneTimelineを停止
+        GameObject.Find("GameSceneTimeline").GetComponent<PlayableController>().StopTimeline();
 
 
     }
     void Update()
     {
+        Debug.Log(animatorSpeed);
         if (isGoal == false)
         {
             //クリアタイムの計算
@@ -109,7 +70,6 @@ public class UnityChanController : MonoBehaviour
             {
                 this.myAnimator.SetBool("Rest", false);
             }
-
             if (countTime > 4)
             {
                 //休みモーションを開始
@@ -142,27 +102,22 @@ public class UnityChanController : MonoBehaviour
     //トリガーモードで他のオブジェクトと接触した場合の処理
     void OnTriggerEnter(Collider other)
     {
+        //Update()内のUnityちゃんの動きを減衰させる処理が開始
         this.isStop = true;
-
         //衝突した障害物を格納
         obstacle = other.gameObject;
-
         //ゴール地点に到達した場合
         if (other.gameObject.tag == "GoalTag")
         {
             //ゲームクリア
             isGoal = true;
-
             //ハイスコアを更新
             if (countClear < highScore)
             {
                 PlayerPrefs.SetFloat("HIGHSCORE", countClear);
             }
-
             //コルーチンでクリアアニメーション再生
             StartCoroutine("ClearAnimationcoRoutine");
-
-            
         }
     }
 
@@ -179,14 +134,11 @@ public class UnityChanController : MonoBehaviour
     IEnumerator ClearAnimationcoRoutine()
     {
         yield return new WaitForSeconds(1); // 2秒待機
-        clearAnimation.enabled = true; //クリアアニメーションtimelineのplayableをオン
-
+        GameObject.Find("GameClearTimeline").GetComponent<PlayableController>().PlayTimeline(); //クリアアニメーションtimelineのplayableをオン
         //変数をリセット
         VariableReset();
-
         //このスクリプトをオフ
         GetComponent<UnityChanController>().enabled = false;
-        
     }
 
 
@@ -195,21 +147,14 @@ public class UnityChanController : MonoBehaviour
     //変数のリセットをする関数
     void VariableReset()
     {
-    //障害物のオブジェクトを格納しておく変数
-    obstacle = null;
-    //障害物に塞がれた判定
-    isStop = false;
-    //ゴールしてないかの判定
-    isGoal = false;
+    obstacle = null; //障害物のオブジェクトを格納しておく変数
+    isStop = false;　//障害物に塞がれた判定
+    isGoal = false;　//ゴールしてないかの判定
     forwardForce = 300.0f;
-    //アニメーター
-    animatorSpeed = 1;
-    //経過時間
-    countTime = 0.0f;
-    //クリアタイム
-    countClear = 0.0f;
-    //動きを減速させる係数
-    decelerateCoefficient = 0.95f;
+    animatorSpeed = 1f;　//アニメーター
+    countTime = 0.0f;　//経過時間
+    countClear = 0.0f;　//クリアタイム
+    decelerateCoefficient = 0.95f;　//動きを減速させる係数
     }
 
 }
