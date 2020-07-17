@@ -16,6 +16,7 @@ public class UnityChanController : MonoBehaviour
     private GameObject obstacle = null; //障害物のオブジェクトを格納しておく変数
     private bool isStop = false; //障害物に塞がれた判定
     private bool isGoal = false; //ゴールしてないかの判定
+    private bool isHighScore = false; //ハイスコアを更新したかの判定
     private GameObject clearTimeText; //タイムを表示するテキスト
     private float highScore; //ハイスコア用変数
     
@@ -32,9 +33,6 @@ public class UnityChanController : MonoBehaviour
         //Animatorコンポーネントを取得
         this.myAnimator = GetComponent<Animator>();
 
-        //走るアニメーションを開始
-        this.myAnimator.SetFloat("Speed", animatorSpeed);
-
         //Rigidbodyコンポーネントを取得
         this.myRigidbody = GetComponent<Rigidbody>();
 
@@ -48,6 +46,9 @@ public class UnityChanController : MonoBehaviour
     }
     void Update()
     {
+        //走るアニメーションを開始
+        this.myAnimator.SetFloat("Speed", animatorSpeed);
+
         Debug.Log(animatorSpeed);
         if (isGoal == false)
         {
@@ -111,11 +112,14 @@ public class UnityChanController : MonoBehaviour
         {
             //ゲームクリア
             isGoal = true;
+            GameObject.Find("ScoreTime").GetComponent<Text>().text = "スコアタイム" + countClear.ToString("f2") + "秒";
             //ハイスコアを更新
             if (countClear < highScore)
             {
                 PlayerPrefs.SetFloat("HIGHSCORE", countClear);
+                isHighScore = true;   
             }
+            
             //コルーチンでクリアアニメーション再生
             StartCoroutine("ClearAnimationcoRoutine");
         }
@@ -134,7 +138,14 @@ public class UnityChanController : MonoBehaviour
     IEnumerator ClearAnimationcoRoutine()
     {
         yield return new WaitForSeconds(1); // 2秒待機
-        GameObject.Find("GameClearTimeline").GetComponent<PlayableController>().PlayTimeline(); //クリアアニメーションtimelineのplayableをオン
+        if(isHighScore == true)
+        {
+            GameObject.Find("GameClearTimeline(HighScore)").GetComponent<PlayableController>().PlayTimeline(); //クリアアニメーションtimelineのplayableをオン
+        }else
+        {
+            GameObject.Find("GameClearTimeline").GetComponent<PlayableController>().PlayTimeline(); //クリアアニメーションtimelineのplayableをオン
+
+        }
         //変数をリセット
         VariableReset();
         //このスクリプトをオフ

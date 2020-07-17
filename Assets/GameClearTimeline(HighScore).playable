@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 337831424, guid: 6a10b2909283487f913b00d94cd3faf5, type: 3}
-  m_Name: GameClearTimeline
+  m_Name: GameClearTimeline(HighScore)
   m_EditorClassIdentifier: 
   m_NextId: 0
   m_Tracks:
@@ -1055,6 +1055,23 @@ MonoBehaviour:
   m_Script: {fileID: 442072544, guid: 6a10b2909283487f913b00d94cd3faf5, type: 3}
   m_Name: ActivationPlayableAsset
   m_EditorClassIdentifier: 
+--- !u!114 &114211936492567688
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 2024714994, guid: 6a10b2909283487f913b00d94cd3faf5, type: 3}
+  m_Name: AnimationPlayableAsset of WIN00
+  m_EditorClassIdentifier: 
+  m_Clip: {fileID: 7400000, guid: 8ed1b48d6c859354dbb4b646a9065984, type: 2}
+  m_Position: {x: 0, y: 0, z: 0}
+  m_Rotation: {x: 0, y: 0, z: 0, w: 1}
+  m_UseTrackMatchFields: 0
+  m_MatchTargetFields: 63
+  m_RemoveStartOffset: 1
 --- !u!114 &114281013465613098
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1142,23 +1159,6 @@ MonoBehaviour:
   m_ApplyOffsets: 0
   m_AvatarMask: {fileID: 0}
   m_ApplyAvatarMask: 1
---- !u!114 &114510345109631134
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 2024714994, guid: 6a10b2909283487f913b00d94cd3faf5, type: 3}
-  m_Name: AnimationPlayableAsset of REFLESH00
-  m_EditorClassIdentifier: 
-  m_Clip: {fileID: 7400000, guid: a50052b92a384614a8363c91fede7d5e, type: 2}
-  m_Position: {x: 0, y: 0, z: 0}
-  m_Rotation: {x: 0, y: 0, z: 0, w: 1}
-  m_UseTrackMatchFields: 0
-  m_MatchTargetFields: 63
-  m_RemoveStartOffset: 1
 --- !u!114 &114548393522669188
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1342,9 +1342,9 @@ MonoBehaviour:
   m_Clips:
   - m_Start: 0.9
     m_ClipIn: 0
-    m_Asset: {fileID: 114510345109631134}
+    m_Asset: {fileID: 114211936492567688}
     m_Duration: 4.416666666666666
-    m_TimeScale: 0.76
+    m_TimeScale: 1
     m_ParentTrack: {fileID: 114904458448273984}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
@@ -1370,19 +1370,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 2
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -1395,7 +1383,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 1
     m_PostExtrapolationTime: Infinity
     m_PreExtrapolationTime: 0.9
-    m_DisplayName: REFLESH00
+    m_DisplayName: WIN00
     m_Version: 1
   m_OpenClipPreExtrapolation: 0
   m_OpenClipPostExtrapolation: 0

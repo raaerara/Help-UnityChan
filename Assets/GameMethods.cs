@@ -11,8 +11,7 @@ public class GameMethods : MonoBehaviour
     public GameObject roadblockerPrefab; //carPrefabを入れる
     public GameObject pianoPrefab; //pianoPrefabを入れる
     public GameObject tankPrefab; //tankPrefabを入れる
-    ////シーン中オブジェクトの取得
-    private GameObject player; //unityちゃんのオブジェクトを入れる変数
+        
     //////数値・係数を扱う変数
     ////ステージ設定
     private int startPos = 50; //スタート地点
