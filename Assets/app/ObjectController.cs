@@ -27,7 +27,7 @@ public class ObjectController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 
     void OnMouseDown()
@@ -87,6 +87,8 @@ public class ObjectController : MonoBehaviour
 
         
     }
+
+    
 
 
     void Billboard_ReflectScore()

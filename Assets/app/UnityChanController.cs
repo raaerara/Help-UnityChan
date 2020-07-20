@@ -8,11 +8,11 @@ public class UnityChanController : MonoBehaviour
     
     private Animator myAnimator; //アニメーションするためのコンポーネントを入れる
     private Rigidbody myRigidbody; //Unityちゃんを移動させるコンポーネントを入れる
-    private float forwardForce = 300.0f; //前進するための力
+    private float forwardForce = 100.0f; //前進するための力
     private float animatorSpeed = 1f; //アニメーター
     private float countTime = 0.0f; //経過時間
     private float countClear = 0.0f; //クリアタイム
-    private float decelerateCoefficient = 0.95f; //動きを減速させる係数
+    private float decelerateCoefficient = 0.98f; //動きを減速させる係数
     private GameObject obstacle = null; //障害物のオブジェクトを格納しておく変数
     private bool isStop = false; //障害物に塞がれた判定
     private bool isGoal = false; //ゴールしてないかの判定
@@ -49,7 +49,6 @@ public class UnityChanController : MonoBehaviour
         //走るアニメーションを開始
         this.myAnimator.SetFloat("Speed", animatorSpeed);
 
-        Debug.Log(animatorSpeed);
         if (isGoal == false)
         {
             //クリアタイムの計算
@@ -89,7 +88,7 @@ public class UnityChanController : MonoBehaviour
             countTime = 0.0f;
             this.myAnimator.SetBool("Rest", false);
             //前に進む
-            forwardForce = 300.0f;
+            forwardForce = 100.0f;
             if (animatorSpeed < 1)
             {
                 this.myAnimator.SetFloat("Speed", animatorSpeed += 0.1f);

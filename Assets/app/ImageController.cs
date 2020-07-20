@@ -42,7 +42,6 @@ public class ImageController : MonoBehaviour
 
             if (alpha <= 0)
             {
-                Debug.Log("0だよ");
                 image.enabled = false;
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 1.0f);
                 isFadeout = false;
