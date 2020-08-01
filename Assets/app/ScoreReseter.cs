@@ -4,13 +4,8 @@ using UnityEngine;
 
 public class ScoreReseter : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
         PlayerPrefs.DeleteAll();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 }

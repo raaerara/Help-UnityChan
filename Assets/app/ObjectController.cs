@@ -1,102 +1,140 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class ObjectController : MonoBehaviour
 {
-
-
-    private float highScore; //ハイスコア用変数
-
-    private int breakCount = 0; //破壊されるオブジェクトが壊れるまでのタップ回数カウント
-
-    //
+    private float highScore;
+    private int breakCount = 0;
     private GameObject scoreObject;
     private GameObject startObject;
+    public GameObject particleDestroy;
+    private GameObject billBoard;
+    private GameMethods gameMethods;
+    private SEController sE;
+    private OpCounter opCounter;
+    private Material objectColor;
+    private Animator myAnimator;
+    private Text clearTimeText;
+    private PlayableController gameTitleTimeline;
+    private PlayableController gameTitleTimelineChara;
+    private PlayableController gameSceneTimeline;
+    private PlayableController gameTitleTimelineAfterScore;
+    private PlayableController gameScoreTimeline;
+    private PlayableController gameScoreTimelineChara;
 
-
-
-    // Use this for initialization
     void Start()
     {
-        scoreObject = GameObject.Find("ScoreObject"); //Unityちゃんの手についてるオブジェクト
-        startObject = GameObject.Find("StartObject"); //Unityちゃんの手についてるオブジェクト
-    }
+        //オブジェクトの格納
+        scoreObject = GameObject.Find("ScoreObject");
+        startObject = GameObject.Find("StartObject");
+        billBoard = GameObject.Find("BillBoard");
+        //コンポーネントの格納
+        sE = GameObject.Find("SE").GetComponent<SEController>();
+        this.myAnimator = GetComponent<Animator>();
+        gameMethods = GameObject.Find("GameMethods").GetComponent<GameMethods>();
+        opCounter = GameObject.Find("CountImage").GetComponent<OpCounter>();
+        clearTimeText = GameObject.Find("ClearTimeText").GetComponent<Text>();
+        gameTitleTimeline = GameObject.Find("GameTitleTimeline").GetComponent<PlayableController>();
+        gameTitleTimelineChara = GameObject.Find("GameTitleTimeline(Chara)").GetComponent<PlayableController>();
+        gameSceneTimeline = GameObject.Find("GameSceneTimeline").GetComponent<PlayableController>();
+        gameTitleTimelineAfterScore = GameObject.Find("GameTitleTimeline(AfterScore)").GetComponent<PlayableController>();
+        gameScoreTimeline = GameObject.Find("GameScoreTimeline").GetComponent<PlayableController>();
+        gameScoreTimelineChara = GameObject.Find("GameScoreTimeline(Chara)").GetComponent<PlayableController>();
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     void OnMouseDown()
     {
-        if(this.gameObject.tag == "StartObjectTag")
+        if (this.gameObject.tag == "StartObjectTag")
         {
-            Debug.Log("スタートするよ");
-            //アイテム生成
-            GameObject.Find("GameMethods").GetComponent<GameMethods>().ItemGenerate();
-            GameObject.Find("GameTitleTimeline").GetComponent<PlayableController>().StopTimeline(); //Title演出のtimelineのplayableをオフ
-            GameObject.Find("GameTitleTimeline (Chara)").GetComponent<PlayableController>().StopTimeline(); //Title演出(キャラ)のtimelineのplayableをオフ
-            GameObject.Find("GameSceneTimeline").GetComponent<PlayableController>().PlayTimeline(); //ゲーム開始演出のtimelineのplayableをオン
-            scoreObject.SetActive(false); //Unityちゃんの手についてるオブジェクトをオフ
-            startObject.SetActive(false); //Unityちゃんの手についてるオブジェクトをオフ
-            GameObject.Find("BillBoard").SetActive(false); //Billboardオブジェクトをオフ
-            GameObject.Find("CountImage").GetComponent<OpCounter>().CallcoRoutine();
+            //GameMethods.cs記述のItemGenerate()を呼び出す
+            gameMethods.ItemGenerate();
+            //Playableのオンオフ
+            gameTitleTimeline.StopTimeline();
+            gameTitleTimelineChara.StopTimeline();
+            gameSceneTimeline.PlayTimeline();
+            //オブジェクトをオフ
+            scoreObject.SetActive(false);
+            startObject.SetActive(false);
+            billBoard.SetActive(false);
+            //OpCounter.cs内記述のOPカウントダウンをするコルーチンを呼び出す
+            opCounter.CallcoRoutine();
+            //右上のタイムカウントしてるテキストのリセット
+            clearTimeText.text = "0.00秒";
         }
-        else if(this.gameObject.tag == "ScoreObjectTag")
+        else if (this.gameObject.tag == "ScoreObjectTag")
         {
             Billboard_ReflectScore();
-            GameObject.Find("GameTitleTimeline").GetComponent<PlayableController>().StopTimeline(); //Score演出のtimelineのplayableをオフ
-            GameObject.Find("GameTitleTimeline (AfterScore)").GetComponent<PlayableController>().StopTimeline(); //Score演出(キャラ)のtimelineのplayableをオフ
-            GameObject.Find("GameTitleTimeline (Chara)").GetComponent<PlayableController>().StopTimeline(); //Score演出(キャラ)のtimelineのplayableをオフ
-            GameObject.Find("GameScoreTimeline").GetComponent<PlayableController>().PlayTimeline(); //スコア演出のtimelineのplayableをオン
-            GameObject.Find("GameScoreTimeline (Chara)").GetComponent<PlayableController>().PlayTimeline(); //スコア演出(キャラ)のtimelineのplayableをオン
-            scoreObject.SetActive(false); //Unityちゃんの手についてるオブジェクトをオフ
-            startObject.SetActive(false); //Unityちゃんの手についてるオブジェクトをオフ
+            //Playableのオンオフ
+            gameTitleTimeline.StopTimeline();
+            gameTitleTimelineAfterScore.StopTimeline();
+            gameTitleTimelineChara.StopTimeline();
+            gameScoreTimeline.PlayTimeline();
+            gameScoreTimelineChara.PlayTimeline();
+            //オブジェクトをオフ
+            scoreObject.SetActive(false);
+            startObject.SetActive(false);
         }
-        else if(this.gameObject.tag == "HomeButton_BillBoardViewTag")
+        else if (this.gameObject.tag == "HomeButton_BillBoardViewTag")
         {
-            Debug.Log("できてるよ");
-            GameObject.Find("GameScoreTimeline").GetComponent<PlayableController>().StopTimeline(); //Score演出のtimelineのplayableをオフ
-            GameObject.Find("GameScoreTimeline (Chara)").GetComponent<PlayableController>().StopTimeline(); //Score演出(キャラ)のtimelineのplayableをオフ
-            GameObject.Find("GameTitleTimeline (AfterScore)").GetComponent<PlayableController>().PlayTimeline(); //Title演出のtimelineのplayableをオン
-            GameObject.Find("GameTitleTimeline (Chara)").GetComponent<PlayableController>().PlayTimeline(); //Title演出(キャラ)のtimelineのplayableをオン
-            scoreObject.SetActive(true); //Unityちゃんの手についてるオブジェクトをオン
-            startObject.SetActive(true); //Unityちゃんの手についてるオブジェクトをオン
+            gameScoreTimeline.StopTimeline();
+            gameScoreTimelineChara.StopTimeline();
+            gameTitleTimelineAfterScore.PlayTimeline();
+            gameTitleTimelineChara.PlayTimeline();
+            scoreObject.SetActive(true);
+            startObject.SetActive(true);
         }
         else
         {
+            //震えるアニメーション再生
+            this.myAnimator.SetTrigger("VIB");
+            sE.TouchSound();
             breakCount++;
-            Debug.Log(breakCount);
+            //クリックされたオブジェクトの子のマテリアルカラーを少し赤くする処理
+            //各オブジェクトが破壊される直前で一番赤い状態になるよう後で変更
+            for (int i = 0; i < this.gameObject.transform.childCount; i++)
+            {
+                foreach (Renderer targetRenderer in this.gameObject.transform.GetChild(i).GetComponents<Renderer>())
+                {
+                    foreach (Material material in targetRenderer.materials)
+                    {
+                        material.color = new Color(material.color.a, material.color.g * 0.8f, material.color.b * 0.8f);
+                    }
+                }
+            }
 
-            if (this.gameObject.tag == "RoadBlockerTag" && breakCount == 2)
+            if (this.gameObject.tag == "RoadBlockerTag" && breakCount == 8)
             {
-                Destroy(this.gameObject);
+                ObjectDestroy();
             }
-            else if (this.gameObject.tag == "PianoTag" && breakCount == 4)
+            else if (this.gameObject.tag == "PianoTag" && breakCount == 14)
             {
-                Destroy(this.gameObject);
+                ObjectDestroy();
             }
-            else if (this.gameObject.tag == "TankTag" && breakCount == 10)
+            else if (this.gameObject.tag == "TankTag" && breakCount == 24)
             {
-                Destroy(this.gameObject);
+                ObjectDestroy();
             }
         }
-
-        
     }
 
-    
+    void ObjectDestroy()
+    {
+        //パーティクルの再生
+        Instantiate(particleDestroy, this.transform.position, Quaternion.identity);
+        sE.DestroySound();
+        Destroy(this.gameObject);
+    }
 
 
     void Billboard_ReflectScore()
     {
-        //保存しておいたハイスコアを呼び出し取得し保存されていなければ9999になる
+        //保存しておいたハイスコアを呼び出し取得。保存されていなければ9999にする
         highScore = PlayerPrefs.GetFloat("HIGHSCORE", 9999);
 
         GameObject.Find("Score_BillBoardView").GetComponent<TextMeshPro>().text = highScore.ToString("f2") + "s";
     }
-
 }

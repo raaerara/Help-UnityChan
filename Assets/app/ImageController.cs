@@ -6,35 +6,22 @@ using UnityEngine.Playables;
 
 public class ImageController : MonoBehaviour
 {
-    ////オブジェクトの取得用変数
-    private GameObject unityChan; //Unityちゃんオブジェクトを入れる変数
-    ////スクリプトの取得用変数
-    private Image image; //Imageコンポーネントを入れる変数
-    
-    //////数値・係数を扱う変数
     private float alpha = 1.0f;
-    ////係数
-    private float alphaSpeed; //フェードアウトのスピード
+    private float alphaSpeed;
+    private bool isFadeout = false;
+    private GameObject unityChan;
+    private Image image;
+    
 
-    //private bool isCountEnd = false; //カウント終了の判定
-    private bool isFadeout = false; //Imageフェードアウト開始の判定
-
-
-
-
-    // Use this for initialization
     void Start()
     {
-        ////オブジェクトの取得
-        unityChan = GameObject.Find("unitychan"); //Unityちゃんオブジェクトを取得
-        ////スクリプトの取得
-        image = this.GetComponent<Image>(); //アタッチしているオブジェクトからImageControllerを取得
+        unityChan = GameObject.Find("unitychan");
+        image = this.GetComponent<Image>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        ////Imageフェードアウト処理
+        //アタッチしているImageのフェードアウト処理
         if (isFadeout == true)
         {
             image.color = new Color(image.color.r, image.color.g, image.color.b, alpha);
@@ -49,20 +36,21 @@ public class ImageController : MonoBehaviour
         }
     }
 
-
-    void Fadeout(float num) //Imageを第二引数に入れた数値ずつフェードアウトさせる
+    //第二引数に入れた数値ずつフェードアウトさせる
+    void Fadeout(float num)
     {
-        isFadeout = true; //Update()のImageフェードアウト処理を開始
+        //Update()のImageフェードアウト処理を開始
+        isFadeout = true; 
         alphaSpeed = num;
     }
 
-    ////リトライボタンを押したときに各オブジェクトをゲーム開始位置に戻す
+    //リトライボタン(Button_Retry)から呼び出す用。押したときに各オブジェクトをゲーム開始位置に戻す処理
     public void OnRetry(bool onlyFade)
     {
         if(onlyFade != true)
         {
-            unityChan.transform.position = new Vector3(0, 0, 0); //Unityちゃんの座標を戻す
+            unityChan.transform.position = new Vector3(0, 0, 0);
             }
-        Fadeout(0.1f); //このスクリプトをアタッチしているRetryボタンをフェードアウト
+        Fadeout(0.1f);
     }
 }

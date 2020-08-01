@@ -6,40 +6,25 @@ using UnityEngine.Playables;
 
 public class GameMethods : MonoBehaviour
 {
-    ////////何かを取得する用の変数
-    //////Prefabの取得
-    ////生成する障害物Prefabの取得
-    public GameObject roadblockerPrefab; //carPrefabを入れる
-    public GameObject pianoPrefab; //pianoPrefabを入れる
-    public GameObject tankPrefab; //tankPrefabを入れる
-        
-    //////数値・係数を扱う変数
-    ////ステージ設定
-    private int startPos = 50; //スタート地点
-    private int goalPos = 400; //ゴール地点
+    //スタート地点の設定
+    private int startPos = 50;
+    //ゴール地点の設定
+    private int goalPos = 400;
+    public GameObject roadblockerPrefab;
+    public GameObject pianoPrefab;
+    public GameObject tankPrefab;
+    private PlayableController gameTitleTimeline;
     
-    
-    // Use this for initialization
     void Start()
     {
-        
-
-        GameObject.Find("GameTitleTimeline").GetComponent<PlayableController>().PlayTimeline(); //ゲーム開始演出のtimelineのplayableをオン
-        GameObject.Find("GameTitleTimeline (Chara)").GetComponent<PlayableController>().PlayTimeline(); //ゲーム開始演出のtimelineのplayableをオン
-
+        //ゲーム開始演出Timelineの再生
+        GameObject.Find("GameTitleTimeline").GetComponent<PlayableController>().PlayTimeline();
+        GameObject.Find("GameTitleTimeline(Chara)").GetComponent<PlayableController>().PlayTimeline();
+        gameTitleTimeline = GameObject.Find("GameTitleTimeline").GetComponent<PlayableController>();
     }
-
-    // Update is called once per frame
-    void Update()
+ 
+     public void ItemGenerate()
     {
-        
-    }
-
-
-    //一定の距離ごとに障害物オブジェクトを生成するメソッド
-    public void ItemGenerate()
-    {
-        
         for (int i = startPos; i < goalPos; i += 30)
         {
             //どのアイテムを出すかランダムに設定
@@ -70,21 +55,13 @@ public class GameMethods : MonoBehaviour
     public void ObjectActivate(string name, bool active)
     {
         GameObject turnOnObject = GameObject.Find(name);
-        if(active == true)
+        if (active == true)
         {
             turnOnObject.SetActive(true);
-        }else
+        }
+        else
         {
             turnOnObject.SetActive(false);
         }
     }
-
-    //ゲーム起動もしくはHomeボタンで戻ったときの演出
-    public void GameOpning()
-    {
-        //GameTitleTimelineを再生
-        GameObject.Find("GameTitleTimeline").GetComponent<PlayableController>().PlayTimeline();
-    }
-
-
 }

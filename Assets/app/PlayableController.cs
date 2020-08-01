@@ -7,29 +7,24 @@ public class PlayableController : MonoBehaviour
 
     void Start()
     {
-        //同じゲームオブジェクトにあるPlayableDirectorを取得する
-        playableDirector = GetComponent<PlayableDirector>();
+        playableDirector = this.GetComponent<PlayableDirector>();
     }
 
-    //再生する
     public void PlayTimeline()
     {
         playableDirector.Play();
     }
 
-    //一時停止する
     public void PauseTimeline()
     {
         playableDirector.Pause();
     }
 
-    //一時停止を再開する
     public void ResumeTimeline()
     {
         playableDirector.Resume();
     }
 
-    //停止する
     public void StopTimeline()
     {
         playableDirector.Stop();
