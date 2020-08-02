@@ -9,7 +9,7 @@ public class UnityChanController : MonoBehaviour
     private float forwardForce = 300.0f;
     //動きを減速させる係数
     private float decelerateCoefficient = 0.95f;
-    private float animatorSpeed = 1f;
+    private float animatorSpeed = 0f;
     private float countTime = 0.0f;
     private float countClear = 0.0f;
     private float highScore;
@@ -27,8 +27,8 @@ public class UnityChanController : MonoBehaviour
 
     void Start()
     {
-        highScore = PlayerPrefs.GetFloat("HIGHSCORE", 9999);
-        Debug.Log(highScore.ToString("f2") + "秒");
+        //highScore = PlayerPrefs.GetFloat("HIGHSCORE", 9999);
+        //Debug.Log(highScore.ToString("f2") + "秒");
         //オブジェクトを取得
         clearTimeText = GameObject.Find("ClearTimeText");
         //コンポーネントの取得
@@ -78,8 +78,14 @@ public class UnityChanController : MonoBehaviour
             {
                 this.myAnimator.SetFloat("Speed", animatorSpeed += 0.1f);
             }
+            else
+            {
+                animatorSpeed = 1f;
+                this.myAnimator.SetFloat("Speed", animatorSpeed);
+            }
         }
         this.myRigidbody.AddForce(this.transform.forward * this.forwardForce);
+        Debug.Log(animatorSpeed);
     }
 
     //トリガーモードで他のオブジェクトと接触した場合の処理
@@ -102,11 +108,18 @@ public class UnityChanController : MonoBehaviour
                 {
                     Destroy(clone);
                 }
-                //ハイスコアを更新
+                highScore = PlayerPrefs.GetFloat("HIGHSCORE", 9999);
+                //ハイスコアを更新した場合
                 if (countClear < highScore)
                 {
                     PlayerPrefs.SetFloat("HIGHSCORE", countClear);
                     isHighScore = true;
+                    Debug.Log("ハイスコアを更新しました");
+                }
+                else
+                {
+                    isHighScore = false;
+                    Debug.Log("ハイスコアが更新されませんでした");
                 }
                 //クリアアニメーション再生
                 StartCoroutine("ClearAnimationcoRoutine");
@@ -144,7 +157,7 @@ public class UnityChanController : MonoBehaviour
         isStop = false;
         isGoal = false;
         forwardForce = 300.0f;
-        animatorSpeed = 1f;
+        animatorSpeed = 0f;
         countTime = 0.0f;
         countClear = 0.0f;
         decelerateCoefficient = 0.95f;
